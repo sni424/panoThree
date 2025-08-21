@@ -1,0 +1,385 @@
+
+.room-list-container {
+    position:absolute;
+    top:0;
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height:40px;
+    background-color:rgba(58, 58, 60, 0.30);
+    backdrop-filter: blur(2px);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+    scrollbar-width: none; /* Firefox용 스크롤바 숨김 */
+    -ms-overflow-style: none; /* IE/Edge용 스크롤바 숨김 */
+}
+
+.room-list-container::-webkit-scrollbar {
+    display: none;
+}
+
+.room-list {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    gap: 16px;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.room-list-item {
+    cursor: pointer;
+    height: 100%;
+    width: fit-content;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    border-bottom: 2px solid transparent;
+    transform: translateZ(0);
+}
+
+.room-list-item p {
+    font-size: 16px; /* text-body1 대체, 필요 시 조정 */
+    font-weight: 500; /* font-medium */
+    padding: 4px 16px;
+    border-radius: 8px;
+    color: white;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.room-list-item p:hover {
+    background-color: #f0f0f0; /* hover:bg-hoverColor 대체 */
+    color: #333;
+}
+
+#modalDiv {
+    position:absolute;
+    height: 100vh;
+    width: 100%;
+    top : 0;
+    left : 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index:10;
+    background-color:rgba(58, 58, 60, 0.30);
+    backdrop-filter: blur(2px);
+    display:none;
+}
+
+#optionInfo {
+    width: 100%;
+    max-width: 600px;
+    height: 78%;
+    z-index:20;
+    padding: 8px;
+    background: rgba(58, 58, 60, 0.6);
+    overflow: hidden;
+    border-radius: 8px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+    display:none;
+}
+
+.image-section {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    display: flex;
+}
+
+.image-wrapper {
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    display: inline-flex;
+}
+
+.image-wrapper img {
+    width: 177px;
+    height: 133px;
+}
+
+.zoom-section {
+    align-self: stretch;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    display: inline-flex;
+}
+
+.zoom-wrapper {
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    display: flex;
+}
+
+.zoom-text {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    line-height: 10.78px;
+    word-wrap: break-word;
+}
+
+.zoom-icon-bar {
+    width: 10px;
+    height: 4px;
+    transform: rotate(-45deg);
+    transform-origin: top left;
+    border: 1px solid #FFFFFF;
+}
+
+.divider {
+    align-self: stretch;
+    height: 1px;
+    background: #FFFFFF;
+    border: 1px solid #FFFFFF;
+}
+
+.product-info {
+    align-self: stretch;
+    height: 30px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 4px;
+    display: flex;
+}
+
+.product-name {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 12.74px;
+    word-wrap: break-word;
+}
+
+.product-code {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 11.76px;
+    word-wrap: break-word;
+}
+
+.color-section {
+    align-self: stretch;
+    justify-content: space-between;
+    align-items: center;
+    display: inline-flex;
+}
+
+.color-label {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    line-height: 19.5px;
+    word-wrap: break-word;
+}
+
+.color-value {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    line-height: 19.5px;
+    word-wrap: break-word;
+}
+
+.color-options {
+    align-self: stretch;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    display: inline-flex;
+}
+
+.color-option {
+    width: 32px;
+    height: 32px;
+    position: relative;
+}
+
+.color-option .inner-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+}
+
+.color-option .border-circle {
+    width: 24px;
+    height: 24px;
+    left: 4px;
+    top: 4px;
+    position: absolute;
+    border-radius: 9999px;
+    border: 1px solid #5087E1;
+}
+
+.description {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 4px;
+    display: flex;
+}
+
+.description-text {
+    align-self: stretch;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-family: Pretendard, sans-serif;
+    font-weight: 400;
+    line-height: 19.5px;
+    word-wrap: break-word;
+}
+
+.specs {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    display: flex;
+}
+
+.spec-row {
+    align-self: stretch;
+    justify-content: space-between;
+    align-items: center;
+    display: inline-flex;
+}
+
+.spec-label {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    line-height: 19.5px;
+    word-wrap: break-word;
+}
+
+.spec-value {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 18px;
+    word-wrap: break-word;
+}
+
+.price-section {
+    align-self: stretch;
+    padding-bottom: 16px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 32px;
+    display: flex;
+}
+
+.price-info {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    display: flex;
+}
+
+.base-price {
+    align-self: stretch;
+    text-align: right;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 12.74px;
+    word-wrap: break-word;
+}
+
+.option-price {
+    align-self: stretch;
+    text-align: right;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 12.74px;
+    word-wrap: break-word;
+}
+
+.option-button {
+    align-self: stretch;
+    height: 29px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background: #5087E1;
+    border-radius: 8px;
+    justify-content: space-between;
+    align-items: center;
+    display: inline-flex;
+}
+
+.button-text {
+    flex: 1 1 0;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    line-height: 21px;
+    word-wrap: break-word;
+    cursor:pointer;
+}
