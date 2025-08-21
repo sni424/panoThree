@@ -5,6 +5,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import VHotSpots from "./hotSpots";
 import VCamera from "./camera";
 import VTexture from "./texture";
+import VMoveSpots from "./moveSpots";
 
 export default class Core {
   constructor(containerId) {
@@ -28,9 +29,15 @@ export default class Core {
     // this.controls.enableDamping = true;
     // this.controls.enableZoom = false;
 
-    this.hotspots = new VHotSpots(this.scene, this.camera, this.roomNum);
     this.vcam = new VCamera(this.renderer.domElement, this.camera);
     this.vtexture = new VTexture(this.scene);
+    this.hotspots = new VHotSpots(this.scene, this.camera, this.roomNum);
+    this.moveSpots = new VMoveSpots(
+      this.scene,
+      this.camera,
+      this.roomNum,
+      this
+    );
 
     window.addEventListener("resize", this.onResize.bind(this));
     this.animate();
@@ -48,6 +55,13 @@ export default class Core {
     // this.controls.update();
     //div핫스팟들 자리에서 고정되게
     this.hotspots.update();
+    this.moveSpots.update();
     this.renderer.render(this.scene, this.camera);
+  }
+  movePlace(roomNum) {
+    this.roomNum = roomNum;
+    this.vtexture.changeImageShader(roomNum);
+    this.hotspots.hideShow(roomNum);
+    this.moveSpots.hideShow(roomNum);
   }
 }

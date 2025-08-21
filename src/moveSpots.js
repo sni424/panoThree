@@ -1,16 +1,15 @@
 import * as THREE from "three";
-import hotSpotImg from "/hotSpotImg.png?url";
 
-export default class VHotSpots {
-  constructor(scene, camera, roomNum) {
+export default class VMoveSpots {
+  constructor(scene, camera, roomNum, core) {
     this._scene = scene;
     this._camera = camera;
-    this._inDex = 1;
-    this._domHotspots = [];
     this._roomNum = roomNum;
+    this._domMoveSpots = [];
+    this._core = core;
   }
 
-  addHotSpot(config, texture, position, scale) {
+  addMoveSpot(config, texture, position, scale, num) {
     const geometry = new THREE.CircleGeometry(config.radius, config.segments);
 
     const loadTexture = new THREE.TextureLoader().load(texture);
@@ -23,18 +22,17 @@ export default class VHotSpots {
     mesh.position.set(...position);
 
     mesh.scale.set(scale, scale, scale);
-    mesh.name = `hotSpot_${this._inDex}`;
-    mesh.lookAt(this._camera.position);
+    mesh.name = `hotSpot_${num}`;
+    mesh.rotation.x = -Math.PI / 2;
+    // mesh.lookAt(this._camera.position);
     this._scene.add(mesh);
-    this._inDex += 1;
   }
-  addDivHotSpot(position, style, src, num) {
+
+  addDivMoveSpot(position, style, src, num, nextRoomNum) {
     const posVector = new THREE.Vector3(...position);
     const getContainer = document.getElementById("container");
     let divVisible = true;
-    // const div = document.createElement("div");
-    // div.style.position = "absolute";
-    // div.style.transform = "translate(-50%, -50%)"; // 중앙 정렬
+
     if (this._roomNum !== num) {
       divVisible = false;
     }
@@ -44,7 +42,7 @@ export default class VHotSpots {
     div.style.left = "0px"; // 기준점 고정
     div.style.top = "0px"; // 기준점 고정
     div.style.willChange = "transform"; // 브라우저 최적화 힌트
-
+    // div.style.transform = "rotateX(90deg)";
     this._inDex += 1;
     div.id = `hotSpot_${num}`;
     if (style) Object.assign(div.style, style);
@@ -62,39 +60,57 @@ export default class VHotSpots {
       getContainer.appendChild(div);
     }
 
-    this._domHotspots.push({
+    this._domMoveSpots.push({
       id: div.id,
       position: posVector,
       element: div,
       visible: divVisible,
     });
+    const vector = posVector.clone().project(this._camera);
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const screenX = ((vector.x + 1) / 2) * width;
+    const screenY = ((-vector.y + 1) / 2) * height;
+
+    // hotSpot.element.style.left = `${screenX}px`;
+    // hotSpot.element.style.top = `${screenY}px`;
+
+    div.addEventListener("click", () => {
+      this._core.movePlace(nextRoomNum);
+    });
+    div.style.transform = `translate(${screenX}px, ${screenY}px) translate(-50%, -50%) rotateX(0deg)`;
 
     return div;
   }
 
-  // const stringToArray = id.split("_")
-  // console.log("stringToArray")
+  onClick(num) {
+    console.log("num", num);
+    // 마우스 좌표를 NDC(-1 ~ 1)로 변환
+    this.movePlace(num);
+  }
+
   hideShow(index) {
-    this._domHotspots.forEach((hotSpot) => {
-      const stringToArray = hotSpot.id.split("_");
+    this._domMoveSpots.forEach((moveSpot) => {
+      const stringToArray = moveSpot.id.split("_");
       const idNum = Number(stringToArray[1]);
 
       //카메라 회전하면 뒤에 똑같은게 있음
       if (index !== idNum) {
         // z 값이 1보다 크면 카메라 뒤에 있는 것이므로 숨김
-        hotSpot.element.style.display = "none";
-        hotSpot.visible = false;
+        moveSpot.element.style.display = "none";
+        moveSpot.visible = false;
 
         return;
       } else {
-        hotSpot.visible = true;
-        hotSpot.element.style.display = "block";
+        moveSpot.visible = true;
+        moveSpot.element.style.display = "block";
       }
     });
   }
 
   update() {
-    this._domHotspots.forEach((hotSpot) => {
+    this._domMoveSpots.forEach((hotSpot) => {
       const vector = hotSpot.position.clone().project(this._camera);
 
       //카메라 회전하면 뒤에 똑같은게 있음
@@ -116,14 +132,10 @@ export default class VHotSpots {
       const screenX = ((vector.x + 1) / 2) * width;
       const screenY = ((-vector.y + 1) / 2) * height;
 
-      hotSpot.element.style.transform = `translate(${screenX}px, ${screenY}px) translate(-50%, -50%)`;
-    });
-  }
-  removeHotSpot(index) {
-    this._scene.traverse((child) => {
-      if (child.name === `hotSpot_${index}`) {
-        child.removeFromParent();
-      }
+      // hotSpot.element.style.left = `${screenX}px`;
+      // hotSpot.element.style.top = `${screenY}px`;
+
+      hotSpot.element.style.transform = `translate(${screenX}px, ${screenY}px) translate(-50%, -50%) rotateX(0deg)`;
     });
   }
 }

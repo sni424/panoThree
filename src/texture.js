@@ -90,11 +90,8 @@ export default class VTexture {
       transparent: true, // 투명도 활성화
     });
 
-    // const material = new THREE.MeshBasicMaterial({
-    //   map: new THREE.TextureLoader().load(this._textures[0]),
-    //   side: THREE.BackSide,
-    // });
     this.mesh = new THREE.Mesh(geometry, this.material);
+    this.mesh.name = "spaceMesh";
     this._scene.add(this.mesh);
   }
 

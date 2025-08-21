@@ -68,9 +68,7 @@ function createRoomList(roomInfo, core) {
       // 클릭 이벤트 핸들러 (필요 시 로직 추가)
       li.addEventListener("click", () => {
         console.log(`방 "${room.name}" (인덱스: ${room.index}) 클릭됨`);
-        core.roomNum = room.index;
-        core.vtexture.changeImageShader(room.index);
-        core.hotspots.hideShow(room.index);
+        core.movePlace(room.index);
       });
 
       // p 요소 생성
