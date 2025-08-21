@@ -62,6 +62,13 @@ export default class VHotSpots {
       getContainer.appendChild(div);
     }
 
+    div.addEventListener("click", () => {
+      const modalDiv = document.getElementById("modalDiv");
+      const optionInfo = document.getElementById("optionInfo");
+      modalDiv.style.display = "flex";
+      optionInfo.style.display = "flex";
+    });
+
     this._domHotspots.push({
       id: div.id,
       position: posVector,

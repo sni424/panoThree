@@ -2,10 +2,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-import VHotSpots from "./hotSpots";
-import VCamera from "./camera";
-import VTexture from "./texture";
-import VMoveSpots from "./moveSpots";
+import VHotSpots from "./VHotSpots";
+import VCamera from "./VCamera";
+import VTexture from "./VTexture";
+import VMoveSpots from "./VMoveSpots";
 
 export default class Core {
   constructor(containerId) {
