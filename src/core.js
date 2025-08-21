@@ -1,6 +1,5 @@
 // Core.js
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 import VHotSpots from "./VHotSpots";
 import VCamera from "./VCamera";
@@ -25,10 +24,6 @@ export default class Core {
     this.container.appendChild(this.renderer.domElement);
     this.roomNum = 1;
 
-    // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    // this.controls.enableDamping = true;
-    // this.controls.enableZoom = false;
-
     this.vcam = new VCamera(this.renderer.domElement, this.camera);
     this.vtexture = new VTexture(this.scene);
     this.hotspots = new VHotSpots(this.scene, this.camera, this.roomNum);
@@ -47,13 +42,10 @@ export default class Core {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    console.log(" this.roomNum ", this.roomNum);
   }
 
   animate() {
     requestAnimationFrame(this.animate.bind(this));
-    // this.controls.update();
-    //div핫스팟들 자리에서 고정되게
     this.hotspots.update();
     this.moveSpots.update();
     this.renderer.render(this.scene, this.camera);

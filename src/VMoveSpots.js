@@ -22,7 +22,7 @@ export default class VMoveSpots {
     mesh.position.set(...position);
 
     mesh.scale.set(scale, scale, scale);
-    mesh.name = `hotSpot_${num}`;
+    mesh.name = `moveSpot_${num}`;
     mesh.rotation.x = -Math.PI / 2;
     // mesh.lookAt(this._camera.position);
     this._scene.add(mesh);
@@ -44,7 +44,7 @@ export default class VMoveSpots {
     div.style.willChange = "transform"; // 브라우저 최적화 힌트
     // div.style.transform = "rotateX(90deg)";
     this._inDex += 1;
-    div.id = `hotSpot_${num}`;
+    div.id = `moveSpot_${num}`;
     if (style) Object.assign(div.style, style);
 
     if (src) {
@@ -82,12 +82,6 @@ export default class VMoveSpots {
     div.style.transform = `translate(${screenX}px, ${screenY}px) translate(-50%, -50%) rotateX(0deg)`;
 
     return div;
-  }
-
-  onClick(num) {
-    console.log("num", num);
-    // 마우스 좌표를 NDC(-1 ~ 1)로 변환
-    this.movePlace(num);
   }
 
   hideShow(index) {
