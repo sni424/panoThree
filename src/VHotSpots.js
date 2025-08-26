@@ -50,6 +50,7 @@ export default class VHotSpots {
     if (style) Object.assign(div.style, style);
 
     if (src) {
+      console.log("src", src);
       const img = document.createElement("img");
       img.src = src;
       img.style.width = "100%";
