@@ -1,0 +1,390 @@
+{
+	"selectype_page_settings":
+	{
+		"selectype":
+		{
+			"zorder": 1,
+			"bgcolor": "1E1F23",
+			"bgalpha": 1.0,
+			"scrollarea":
+			{
+				"align": "center",
+				"edge": "center",
+				"x": "0",
+				"y": "0",
+				"width": "80%",
+				"height": "75%",
+				"minwidth": 0,
+				"maxwidth": 1430,
+				"minheight": 0,
+				"maxheight": 620,
+				"bgcolor": "",
+				"bgalpha": 0.0,
+				"horizontal_spacing": 40,
+				"vertical_spacing": 50,
+				"grip_width": 8,
+				"grip_height": 16,
+				"grip_color": "AAAAAA",
+				"grip_alpha": 0.5,
+				"grip_roundedge": 8
+			},
+			"unit_type_outer_frame":
+			{
+				"width": "250",
+				"height": "280",
+				"bgroundedge": 22,
+				"normal":
+				{
+					"bgcolor": "223148",
+					"bgalpha": 1.0,
+					"bgborder":
+					{
+						"top": 0,
+						"right": 0,
+						"bottom": 0,
+						"left": 0,
+						"color": "",
+						"alpha": 0.0
+					}
+				},
+				"hovered":
+				{
+					"bgcolor": "323B36",
+					"bgalpha": 1.0,
+					"bgborder":
+					{
+						"top": 2,
+						"right": 2,
+						"bottom": 2,
+						"left": 2,
+						"color": "83B26B",
+						"alpha": 1.0
+					}
+				}
+			},
+			"type_info_frame":
+			{
+				"width": 250,
+				"height": 250,
+				"bgcolor": "",
+				"bgalpha": 0.0
+			},
+			"type_name_frame":
+			{
+				"x": 48,
+				"y": 9.5,
+				"width": 154,
+				"height": 34,
+				"value":
+				{
+					"align": "lefttop",
+					"edge": "lefttop",
+					"y": 4,
+					"font_family": "NanumSquare Neo OTF",
+					"text_align": "lefttop",
+					"normal":
+					{
+						"font_weight": "400",
+						"font_size": 27,
+						"font_color": "4B8BED"
+					},
+					"hovered":
+					{
+						"font_weight": "400",
+						"font_size": 27,
+						"font_color": "83B26B"
+					}
+				},
+				"title":
+				{
+					"y": 8,
+					"font_family": "NanumSquare Neo OTF",
+					"text_align": "lefttop",
+					"normal":
+					{
+						"font_weight": "400",
+						"font_size": 16,
+						"font_color": "4B8BED"
+					},
+					"hovered":
+					{
+						"font_weight": "400",
+						"font_size": 16,
+						"font_color": "83B26B"
+					}
+				}
+			},
+			"floor_plan":
+			{
+				"x": 48,
+				"y": 48.5,
+				"width": 154,
+				"height": 150,
+				"image":
+				{
+					"align": "center",
+					"edge": "center",
+					"x": 0,
+					"y": 0,
+					"normal_scale": 0.6,
+					"hovered_scale": 0.66
+				}
+			},
+			"exclusive_private_area_frame":
+			{
+				"x": 48,
+				"y": 203.5,
+				"width": 154,
+				"height": 16,
+				"font_family": "NanumSquare Neo OTF",
+				"font_weight": "400",
+				"font_size": 12.5,
+				"font_color": "B4BBCC",
+				"text_align": "left"
+			},
+			"supply_area_frame":
+			{
+				"x": 48,
+				"y": 224.5,
+				"width": 154,
+				"height": 16,
+				"font_family": "NanumSquare Neo OTF",
+				"font_weight": "400",
+				"font_size": 12.5,
+				"font_color": "B4BBCC",
+				"text_align": "left"
+			},
+			"linked_button":
+			{
+				"width": "160",
+				"height": "30",
+				"bgroundedge": 15,
+				"isometric":
+				{
+					"y": "260",
+					"text": "평면VR"
+				},
+				"panoramic":
+				{
+					"y": "293",
+					"text": "내부VR"
+				},
+				"font_family": "NanumSquare Neo OTF",
+				"text_align": "center",
+				"normal":
+				{
+					"bgcolor": "3C5E90",
+					"bgalpha": 1.0,
+					"font_weight": "400",
+					"font_size": 17,
+					"font_color": "AAAFBB"
+				},
+				"hovered":
+				{
+					"bgcolor": "15759D",
+					"bgalpha": 1.0,
+					"font_weight": "400",
+					"font_size": 17,
+					"font_color": "AAAFBB"
+				}
+			},
+			"decoration": [
+				{
+					"type": "image",
+					"url":
+					{
+						"desktop": "/images/vrapoint.png",
+						"tablet": "/images/vrapoint.png",
+						"mobile": "/images/vrapoint.png"
+					},
+					"align": "lefttop",
+					"edge": "lefttop",
+					"x": "79",
+					"y": "65",
+					"width": "215",
+					"height": "prop",
+					"minwidth": 0,
+					"maxwidth": 0,
+					"minheight": 0,
+					"maxheight": 0,
+					"rotate": 0.0,
+					"bgcolor": "",
+					"bgalpha": 0.0,
+					"bgborder": "",
+					"bgroundedge": "",
+					"bgshadow": "",
+					"text": "",
+					"font_family": "",
+					"font_weight": "",
+					"font_size": 0,
+					"font_color": "",
+					"text_align": ""
+				},
+				{
+					"type": "text",
+					"url":
+					{
+						"desktop": "",
+						"tablet": "",
+						"mobile": ""
+					},
+					"align": "top",
+					"edge": "top",
+					"x": "",
+					"y": "60",
+					"width": "",
+					"height": "",
+					"minwidth": 0,
+					"maxwidth": 0,
+					"minheight": 0,
+					"maxheight": 0,
+					"rotate": 0.0,
+					"bgcolor": "",
+					"bgalpha": 0.0,
+					"bgborder": "",
+					"bgroundedge": "",
+					"bgshadow": "",
+					"text": "단위세대를 선택해 주세요",
+					"font_family": "NanumSquare Neo OTF",
+					"font_weight": "400",
+					"font_size": 30,
+					"font_color": "AAAFBB",
+					"text_align": "center"
+				}
+			]
+		},
+		"progressbar":
+		{
+			"zorder": 2,
+			"childflowspacing":
+			{
+				"top": 0,
+				"right": 1,
+				"bottom": 0,
+				"left": 1
+			},
+			"align": "bottom",
+			"edge": "bottom",
+			"height": 30,
+			"bgcolor": "FFFFFF",
+			"bgalpha": 1.0,
+			"button":
+			{
+				"height": 30,
+				"normal":
+				{
+					"bgcolor": "8D9194",
+					"bgalpha": 1.0
+				},
+				"hovered":
+				{
+					"bgcolor": "223148",
+					"bgalpha": 1.0
+				},
+				"inner":
+				{
+					"align": "center",
+					"edge": "center",
+					"title":
+					{
+						"align": "center",
+						"edge": "center",
+						"bgcolor": "",
+						"bgalpha": 0.0,
+						"font_family":"NanumSquare Neo OTF",
+						"font_weight": 700,
+						"font_size": 15,
+						"font_color": "FFFFFF",
+						"text_align": "center",
+						"padding":
+						{
+							"top": 0,
+							"right": 10,
+							"bottom": 0,
+							"left": 10
+						},
+						"circle":
+						{
+							"align": "center",
+							"edge": "center",
+							"diameter": 18,
+							"bgcolor": "FFFFFF",
+							"bgalpha": 1.0,
+							"number":
+							{
+								"align": "center",
+								"edge": "center",
+								"x": -0.5,
+								"y": 0,
+								"bgcolor": "",
+								"bgalpha": 0.0,
+								"font_family": "NanumSquare Neo OTF",
+								"font_weight": 800,
+								"font_size": 10.8,
+								"font_color": "223148",
+								"text_align": "center"
+							},
+							"check":
+							{
+								"align": "center",
+								"edge": "center",
+								"x": 1,
+								"y": -2,
+								"width": 7,
+								"height": 4,
+								"rotate": -45,
+								"bgborder":
+								{
+									"top": 0,
+									"right": 0,
+									"bottom": 2,
+									"left": 2,
+									"color": "223148",
+									"alpha": 1.0
+								}
+							}
+						}
+					}
+				},
+				"list": [
+					{
+						"name": "타입 선택",
+						"page": "selectype"
+					},
+					{
+						"name": "공간 옵션",
+						"page": "spaceoption"
+					},
+					{
+						"name": "내부 옵션",
+						"page": "unitoption"
+					},
+					{
+						"name": "VR 세대투어",
+						"page": "freetour"
+					}
+				]
+			},
+			"notice":
+			{
+				"zorder": 2,
+				"align": "bottom",
+				"edge": "bottom",
+				"height": 25,
+				"text":
+				{
+					"align": "center",
+					"edge": "center",
+					"bgcolor": "",
+					"bgalpha": 0.0,
+					"font_family":"NanumSquare Neo OTF",
+					"font_weight": 400,
+					"font_size": 9,
+					"font_color": "767676",
+					"text_align": "center",
+					"text": "본 영상은 솔루션 개발 과정에서 제작된 시뮬레이션 콘텐츠로, 실제 분양 대상 물건과는 직접적인 연관성이 없습니다. 이는 솔루션의 기능성과 잠재력을 시각적으로 시연하기 위한 프로토타입 예시입니다."
+				}
+			}
+		}
+	}
+}

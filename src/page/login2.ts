@@ -5,62 +5,7 @@
  */
 import type { LoginData, LoginPageSettings, TextData } from "@/type";
 import "../css/login.css";
-
-// --- 유틸리티 함수 ---
-
-/**
- * 16진수 색상 코드를 rgba 문자열로 변환합니다.
- */
-function hexToRgba(hex?: string, alpha: number = 1): string {
-  if (!hex) return "transparent";
-  const r = parseInt(hex.slice(0, 2), 16);
-  const g = parseInt(hex.slice(2, 4), 16);
-  const b = parseInt(hex.slice(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
-/**
- * 요소의 위치와 크기를 설정하는 헬퍼 함수입니다.
- */
-const applyElementPosition = (
-  element: HTMLElement,
-  data: TextData,
-  position: string = "left"
-) => {
-  element.style.position = "absolute";
-
-  // 크기 설정
-  if (data.width) {
-    element.style.width = String(data.width).includes("%")
-      ? String(data.width)
-      : `${data.width}px`;
-  }
-  if (data.height) {
-    element.style.height = String(data.height).includes("%")
-      ? String(data.height)
-      : `${data.height}px`;
-  }
-
-  // 위치 설정
-  if (data.x != null || data.y != null) {
-    if (String(data.x).includes("%") || String(data.y).includes("%")) {
-      if (data.x != null) element.style.left = String(data.x);
-      if (data.y != null) element.style.top = String(data.y);
-    } else {
-      if (position === "center") {
-        element.style.left = "50%";
-        element.style.top = "50%";
-        element.style.transform = `translate(-50%, -50%) translate(${
-          data.x || 0
-        }px, ${data.y || 0}px)`;
-      } else {
-        element.style.transform = `translate(${data.x || 0}px, ${
-          data.y || 0
-        }px)`;
-      }
-    }
-  }
-};
+import { applyElementPosition, hexToRgba } from "@/utils";
 
 // --- 핵심 렌더링 함수 (원본 로직과 동일) ---
 
@@ -73,7 +18,6 @@ const renderTree = <T extends TextData>(
   elementType: keyof HTMLElementTagNameMap = "div"
 ) => {
   if (!data) return;
-  console.log("data", data);
 
   // 'login' 최상위 컨테이너
   if (data.login) {
@@ -121,7 +65,7 @@ const renderTree = <T extends TextData>(
       data.button.bgcolor,
       data.button.bgalpha
     );
-
+    element.style.cursor = "pointer";
     if (data.button.text) {
       const textData = data.button.text as TextData;
       element.innerHTML = (textData.text || "").replaceAll("[br]", "<br>");
@@ -316,10 +260,17 @@ export const login2 = (loginData: LoginPageSettings) => {
     console.error("Container #container not found.");
     return;
   }
-  parentDiv.innerHTML = ""; // 컨테이너 초기화
 
   // 데이터 구조의 최상위부터 렌더링 시작
   renderTree(loginData.login_page_settings, parentDiv);
+  const loginButton = document.getElementById(
+    "login_button"
+  ) as HTMLButtonElement;
+
+  loginButton.addEventListener("click", () => {
+    // 로그인 검증 로직 성공 후 이동
+    window.location.href = "/?pid=bongmyeong&page=estimate/type";
+  });
 };
 
 export default login2;
