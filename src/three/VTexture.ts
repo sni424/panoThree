@@ -1,25 +1,38 @@
 import * as THREE from "three";
+import type { texturePaths } from "@/type";
+import gsap from "gsap";
 
 export default class VTexture {
-  // ✅ 생성자에서 scene과 texturePaths를 인자로 받습니다.
-  constructor(scene, texturePaths) {
+  private _scene: THREE.Scene;
+  private _currentIndex: number;
+  private _textureLoader: THREE.TextureLoader;
+  private _textures_1k: string[];
+  private _textures_4k: string[];
+  private material: THREE.ShaderMaterial;
+  private mesh: THREE.Mesh;
+  private currentTextureIndex: number = 0;
+  private isTransitioning: boolean = false;
+
+  constructor(scene: THREE.Scene, texturePaths: texturePaths) {
     this._scene = scene;
     this._currentIndex = 0;
     this._textureLoader = new THREE.TextureLoader();
 
-    // ✅ 외부에서 받은 데이터로 텍스처 경로를 설정합니다.
     this._textures_1k = texturePaths.lowQuality;
     this._textures_4k = texturePaths.highQuality;
 
     // 저화질 먼저, 완료되면 고화질로 교체 (첫 번째 텍스처 로드)
     const initialLowResTexture = this._textureLoader.load(
       this._textures_1k[0],
-      (lowResTex) => {
-        this._textureLoader.load(this._textures_4k[0], (highResTex) => {
-          this.material.uniforms.texture1.value = highResTex;
-          this.material.uniforms.texture2.value = highResTex;
-          lowResTex.dispose();
-        });
+      (lowResTex: THREE.Texture) => {
+        this._textureLoader.load(
+          this._textures_4k[0],
+          (highResTex: THREE.Texture) => {
+            this.material.uniforms.texture1.value = highResTex;
+            this.material.uniforms.texture2.value = highResTex;
+            lowResTex.dispose();
+          }
+        );
       }
     );
 
@@ -57,7 +70,7 @@ export default class VTexture {
     this._scene.add(this.mesh);
   }
 
-  changeImageShader(index) {
+  changeImageShader(index: number) {
     // 전환 중이면 무시
     if (this.isTransitioning) {
       return console.warn("아직 변경중");
@@ -71,10 +84,10 @@ export default class VTexture {
     const lowResUrl = this._textures_1k[nextIndex];
     const highResUrl = this._textures_4k[nextIndex];
 
-    let highResTextureResult = null;
+    let highResTextureResult: THREE.Texture | null = null;
     let isTransitionAnimationComplete = false;
     // 1. 고화질 텍스처 로드 (백그라운드에서 진행)
-    this._textureLoader.load(highResUrl, (highResTexture) => {
+    this._textureLoader.load(highResUrl, (highResTexture: THREE.Texture) => {
       // 고화질 로드 완료 시
 
       highResTextureResult = highResTexture;
@@ -89,7 +102,7 @@ export default class VTexture {
     });
 
     // 2. 저화질 텍스처 로드 및 애니메이션 시작
-    this._textureLoader.load(lowResUrl, (lowResTexture) => {
+    this._textureLoader.load(lowResUrl, (lowResTexture: THREE.Texture) => {
       this.material.uniforms.texture2.value = lowResTexture;
 
       gsap.to(this.material.uniforms.progress, {

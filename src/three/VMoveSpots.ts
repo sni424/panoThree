@@ -1,15 +1,35 @@
+import type { DomMoveSpot, MoveSpotConfig } from "@/type";
 import * as THREE from "three";
 
 export default class VMoveSpots {
-  constructor(scene, camera, roomNum, core) {
+  private _scene: THREE.Scene;
+  private _camera: THREE.Camera;
+  private _roomNum: number;
+  private _core: { movePlace: (roomNum: number) => void };
+  private _domMoveSpots: DomMoveSpot[];
+  private _inDex: number;
+
+  constructor(
+    scene: THREE.Scene,
+    camera: THREE.Camera,
+    roomNum: number,
+    core: { movePlace: (roomNum: number) => void }
+  ) {
     this._scene = scene;
     this._camera = camera;
     this._roomNum = roomNum;
     this._domMoveSpots = [];
     this._core = core;
+    this._inDex = 0;
   }
 
-  addMoveSpot(config, texture, position, scale, num) {
+  addMoveSpot(
+    config: MoveSpotConfig,
+    texture: string,
+    position: [number, number, number],
+    scale: number,
+    num: number
+  ): void {
     const geometry = new THREE.CircleGeometry(config.radius, config.segments);
 
     const loadTexture = new THREE.TextureLoader().load(texture);
@@ -24,11 +44,16 @@ export default class VMoveSpots {
     mesh.scale.set(scale, scale, scale);
     mesh.name = `moveSpot_${num}`;
     mesh.rotation.x = -Math.PI / 2;
-    // mesh.lookAt(this._camera.position);
     this._scene.add(mesh);
   }
 
-  addDivMoveSpot(position, style, src, num, nextRoomNum) {
+  addDivMoveSpot(
+    position: [number, number, number],
+    style: Partial<CSSStyleDeclaration> | null,
+    src: string | null,
+    num: number,
+    nextRoomNum: number
+  ): HTMLDivElement {
     const posVector = new THREE.Vector3(...position);
     const getContainer = document.getElementById("container");
     let divVisible = true;
@@ -84,7 +109,7 @@ export default class VMoveSpots {
     return div;
   }
 
-  hideShow(index) {
+  hideShow(index: number): void {
     this._domMoveSpots.forEach((moveSpot) => {
       const stringToArray = moveSpot.id.split("_");
       const idNum = Number(stringToArray[1]);
@@ -103,7 +128,7 @@ export default class VMoveSpots {
     });
   }
 
-  update() {
+  update(): void {
     this._domMoveSpots.forEach((hotSpot) => {
       const vector = hotSpot.position.clone().project(this._camera);
 

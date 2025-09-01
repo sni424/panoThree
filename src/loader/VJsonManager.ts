@@ -1,18 +1,22 @@
-export default class VJsonManager {
-  #data = new Map();
-  #jsonPaths;
+import type { JsonPaths } from "@/type";
 
-  constructor(jsonPaths) {
+export default class VJsonManager<T extends JsonPaths> {
+  #data = new Map<keyof T, unknown>();
+  #jsonPaths: T;
+
+  constructor(jsonPaths: T) {
     this.#jsonPaths = jsonPaths;
   }
 
-  static async create(jsonPaths) {
-    const manager = new VJsonManager(jsonPaths);
+  static async create<T extends JsonPaths>(
+    jsonPaths: T
+  ): Promise<VJsonManager<T>> {
+    const manager = new VJsonManager<T>(jsonPaths);
     await manager.loadAll();
     return manager;
   }
 
-  async loadAll() {
+  async loadAll(): Promise<void> {
     const fetchPromises = Object.entries(this.#jsonPaths).map(
       async ([key, path]) => {
         try {
@@ -30,10 +34,10 @@ export default class VJsonManager {
     await Promise.all(fetchPromises);
   }
 
-  get(key) {
+  get<K extends keyof T>(key: K): unknown | null {
     if (!this.#data.has(key)) {
-      console.warn(`[WARN] 키 "${key}"에 해당하는 데이터가 없습니다.`);
+      console.warn(`[WARN] 키 "${String(key)}"에 해당하는 데이터가 없습니다.`);
     }
-    return this.#data.get(key);
+    return this.#data.get(key) ?? null;
   }
 }

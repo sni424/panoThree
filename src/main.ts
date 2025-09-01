@@ -1,55 +1,8 @@
 import Core from "./core.js";
-import hotSpotImg from "/hotSpotImg.png?url";
-import mark from "/mark.png?url";
-import uiCollection from "./uiCollection.js";
-import VJsonManager from "./VJsonManager.js";
-import login from "./page/login.js";
-
-const hotspotsData = [
-  {
-    position: [0, 0, 1],
-    style: { width: "40px", height: "40px", cursor: "pointer" },
-    image: hotSpotImg,
-    room: 1,
-  },
-  {
-    position: [3, 0, -5],
-    style: { width: "40px", height: "40px", cursor: "pointer" },
-    image: hotSpotImg,
-    room: 2,
-  },
-];
-
-const movespotsData = [
-  {
-    position: [1, -2, -4],
-    style: { width: "40px", height: "40px", cursor: "pointer" },
-    image: mark,
-    from: 1,
-    to: 2,
-  },
-  {
-    position: [5, -2, 0],
-    style: { width: "40px", height: "40px", cursor: "pointer" },
-    image: mark,
-    from: 2,
-    to: 3,
-  },
-  {
-    position: [2.5, -2, 2],
-    style: { width: "40px", height: "40px", cursor: "pointer" },
-    image: mark,
-    from: 2,
-    to: 1,
-  },
-  {
-    position: [-5.5, -2, 0.7],
-    style: { width: "40px", height: "40px", cursor: "pointer" },
-    image: mark,
-    from: 3,
-    to: 2,
-  },
-];
+import VJsonManager from "./loader/VJsonManager.js";
+import login from "./page/login.ts";
+import login2 from "./page/login2.ts";
+import type { LoginPageSettings } from "./type.ts";
 
 const filesToLoad = {
   ui: "./json/insite-ui.json",
@@ -58,12 +11,15 @@ const filesToLoad = {
   login: "./json/login.json",
 };
 
+export type FilesToLoadType = typeof filesToLoad;
+
 function main() {
   (async () => {
     const jsonManager = await VJsonManager.create(filesToLoad);
 
     const core = new Core("container", jsonManager);
-    const loginData = jsonManager.get("login");
+    const loginData = jsonManager.get("login") as LoginPageSettings;
+    // core.init3D();
 
     // 5. 로드된 데이터를 사용해 Hotspot과 MoveSpot 추가
     // const hotspotsData = jsonManager.get("hotspots");
@@ -94,7 +50,8 @@ function main() {
     // }
 
     // uiCollection(core);
-    login(loginData.login_page_settings.login);
+    login2(loginData);
+    // login(loginData.login_page_settings.login);
   })();
 
   // hotspotsData.forEach((data) => {
