@@ -32,7 +32,7 @@ export const applyElementPosition = (
     element.style.height = String(data.height).includes("%")
       ? String(data.height)
       : data.height === "prop"
-      ? "100%"
+      ? "auto"
       : `${data.height}px`;
   }
 
