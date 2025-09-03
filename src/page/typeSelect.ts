@@ -178,7 +178,6 @@ const createCardGrid = (
     const card = document.createElement("div");
     scrollArea.appendChild(card);
     card.id = `card_${index + 1}`;
-    console.log("card", card);
 
     // 6. 카드 기본 스타일 적용
     card.style.width = `${cardStyle.width}px`;
