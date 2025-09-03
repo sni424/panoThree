@@ -1,0 +1,46 @@
+[
+  {
+    "position": [1, -2, -4],
+    "style": {
+      "width": "40px",
+      "height": "40px",
+      "cursor": "pointer"
+    },
+    "image": "mark.png",
+    "from": 1,
+    "to": 2
+  },
+  {
+    "position": [5, -2, 0],
+    "style": {
+      "width": "40px",
+      "height": "40px",
+      "cursor": "pointer"
+    },
+    "image": "mark.png",
+    "from": 2,
+    "to": 3
+  },
+  {
+    "position": [2.5, -2, 2],
+    "style": {
+      "width": "40px",
+      "height": "40px",
+      "cursor": "pointer"
+    },
+    "image": "mark.png",
+    "from": 2,
+    "to": 1
+  },
+  {
+    "position": [-5.5, -2, 0.7],
+    "style": {
+      "width": "40px",
+      "height": "40px",
+      "cursor": "pointer"
+    },
+    "image": "mark.png",
+    "from": 3,
+    "to": 2
+  }
+]

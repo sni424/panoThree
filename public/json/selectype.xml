@@ -1,0 +1,717 @@
+<krpano	page_name="selectype"
+		>
+
+	<include url="%VIEWER%/insite-ol/progressbar.xml"/>
+
+	<style	name="style_selectype_outer_frame"
+			type="container"
+			width="100%"
+			height="100%"
+			onloaded.addevent="onloaded_selectype_outer_frame();"
+			/>
+	<style	name="style_selectype_page_unit_type_scrollarea_container"
+			type="container"
+			onlayout.addevent="onlayout_selectype_page_unit_type_scrollarea_container();"
+			/>
+	<style	name="style_selectype_page_unit_type_scrollarea"
+			type="scrollarea"
+			flowchildren="h"
+			flowoverflow="true"
+			align="lefttop"
+			edge="lefttop"
+			width="100%"
+			bg="true"
+			scrolltype="inertia"
+			direction="v"
+			autoscrollbars="null,selectype_page_unit_type_vscrollbar_grip,0"
+			onloaded.addevent="onloaded_selectype_page_unit_type_scrollarea();"
+			onlayout.addevent="onlayout_selectype_page_unit_type_scrollarea();"
+			onoverflowchange.addevent="onoverflowchange_selectype_page_unit_type_scrollarea();"
+			/>
+	<style	name="style_selectype_page_unit_type_vscrollbar_container"
+			type="container"
+			align="right"
+			edge="right"
+			height="100%"
+			/>
+	<style	name="style_selectype_page_unit_type_vscrollbar_grip"
+			type="container"
+			align="righttop"
+			bgcapture="true"
+			onloaded.addevent="onloaded_selectype_page_unit_type_vscrollbar_grip();"
+			/>
+	<style	name="style_selectype_page_unit_type_outer_frame"
+			type="container"
+			bgcapture="true"
+			onover.addevent="onover_selectype_page_unit_type_outer_frame();"
+			onout.addevent="onout_selectype_page_unit_type_outer_frame();"
+			onclick.addevent="onclick_selectype_page_unit_type_outer_frame();"
+			onloaded.addevent="onloaded_selectype_page_unit_type_outer_frame();"
+			/>
+	<style	name="style_selectype_page_type_info_frame"
+			type="container"
+			enablechildren="false"
+			/>
+	<style	name="style_selectype_page_type_name_frame"
+			type="container"
+			/>
+	<style	name="style_selectype_page_type_name_value"
+			type="text"
+			bgalpha="0.0"
+			/>
+	<style	name="style_selectype_page_type_name_title"
+			type="text"
+			bgalpha="0.0"
+			onlayout.addevent="onlayout_selectype_page_type_name_title();"
+			/>
+	<style	name="style_selectype_page_area_frame"
+			type="container"
+			flowchildren="h"
+			/>
+
+	<action autorun="onstart" scope="local">
+		calc(local.outer_name, 'selectype_outer_frame');
+		addlayer(get(local.outer_name));
+		layer[get(local.outer_name)].loadstyle('style_selectype_outer_frame');
+
+		calc(local.scrollarea_container, 'selectype_page_unit_type_scrollarea_container');
+		addlayer(get(local.scrollarea_container));
+		layer[get(local.scrollarea_container)].loadstyle('style_selectype_page_unit_type_scrollarea_container');
+		set(layer[get(local.scrollarea_container)].parent, get(local.outer_name));
+
+		if(
+			<!-- condition -->
+			global.is_opened_help != true
+			,
+			<!-- then-actions -->
+			set(global.is_opened_help, true);
+			calc(local.help_outer_frame, 'selectype_page_unit_type_help_outer_frame');
+			addlayer(get(local.help_outer_frame));
+			set(layer[get(local.help_outer_frame)],
+				type= 'container',
+				parent = get(local.outer_name),
+				width = calc(284 * global.scale),
+				height = calc(312 * global.scale),
+				bgalpha = 0.0,
+				bgborder = calc(2 * global.scale + ' 0x2AABE2 1.0'),
+				bgroundedge = calc(20 * global.scale)
+			);
+			calc(local.help_leader_line, 'selectype_page_unit_type_help_leader_line');
+			addlayer(get(local.help_leader_line));
+			set(layer[get(local.help_leader_line)],
+				type = 'container',
+				parent = get(local.help_outer_frame),
+				align = 'lefttop',
+				edge = 'leftbottom',
+				width = calc(86 * global.scale),
+				height = calc(42 * global.scale),
+				x = calc(80 * global.scale),
+				bgalpha = 0.0,
+				bgborder = calc(2 * global.scale + ',0,0,' + 2 * global.scale + ' 0x2AABE2 1.0')
+			);
+			calc(local.help_end_point, 'selectype_page_unit_type_help_end_point');
+			addlayer(get(local.help_end_point));
+			set(layer[get(local.help_end_point)],
+				type = 'container',
+				parent = get(local.help_leader_line),
+				align = 'righttop',
+				edge = 'left',
+				width = calc(12 * global.scale),
+				height = calc(12 * global.scale),
+				bgcolor = 0x2AABE2,
+				bgalpha = 1.0,
+				bgroundedge = calc(6 * global.scale)
+			);
+			calc(local.help_text, 'selectype_page_unit_type_help_text');
+			addlayer(get(local.help_text));
+			set(layer[get(local.help_text)],
+				type = 'text',
+				parent = get(local.help_end_point),
+				align = 'right',
+				edge = 'left',
+				x = calc(-12 * global.scale),
+				bgalpha = 0.0,
+				text = '현재 104B 타입만 시연하실 수 있습니다.',
+				css = calc('font-family:NanumSquare Neo OTF;font-weight:400;font-size:' + 20 * global.scale + 'px;color:#FFFFFF;'),
+				textalign = 'left'
+			);
+		);
+
+		calc(local.scrollarea, 'selectype_page_unit_type_scrollarea');
+		addlayer(get(local.scrollarea));
+		layer[get(local.scrollarea)].loadstyle('style_selectype_page_unit_type_scrollarea');
+		set(layer[get(local.scrollarea)].parent, get(local.scrollarea_container));
+
+		calc(local.vscrollbar_container, 'selectype_page_unit_type_vscrollbar_container');
+		addlayer(get(local.vscrollbar_container));
+		layer[get(local.vscrollbar_container)].loadstyle('style_selectype_page_unit_type_vscrollbar_container');
+		set(layer[get(local.vscrollbar_container)].parent, get(local.scrollarea_container));
+
+		calc(local.vscrollbar_grip, 'selectype_page_unit_type_vscrollbar_grip');
+		addlayer(get(local.vscrollbar_grip));
+		layer[get(local.vscrollbar_grip)].loadstyle('style_selectype_page_unit_type_vscrollbar_grip');
+		set(layer[get(local.vscrollbar_grip)].parent, get(local.vscrollbar_container));
+	</action>
+
+	<action name="onloaded_selectype_outer_frame" scope="local">
+		<!--
+			selectype page의 background에 zorder와 bgcolor, bgalpha를 적용
+		-->
+		set(caller,
+			zorder = get(global.selectype_page_settings.selectype.zorder),
+			bgcolor = calc('0x' + global.selectype_page_settings.selectype.bgcolor),
+			bgalpha = get(global.selectype_page_settings.selectype.bgalpha)
+		);
+
+		<!--
+			json에 정의된 decoration layer를 화면에 배치
+		-->
+		for(
+			<!-- startactions -->
+			set(local.i, 0);
+			,
+			<!-- condition -->
+			local.i LT global.selectype_page_settings.selectype.decoration.length
+			,
+			<!-- nextactions -->
+			inc(local.i);
+			,
+			<!-- loopactions -->
+			calc(local.name, caller.name + '_' + local.i);
+			addlayer(get(local.name));
+
+			<!--
+				krpano에서 layer를 생성한 후, type 속성에 일치하지 않는 다른 속성을 일괄적으로 set하면 layer가 정상적으로
+				동작하지 않는 문제가 있어, type을 if문에서 먼저 분리한 후 type별로 속성을 골라서 set하도록 수정
+			-->
+			if(
+				<!-- condition -->
+				global.selectype_page_settings.selectype.decoration[get(local.i)].type == 'image'
+				,
+				<!-- then-actions -->
+				set(layer[get(local.name)],
+					type = 'image',
+					parent = get(caller.name),
+					enabled = 'false',
+					align = get(global.selectype_page_settings.selectype.decoration[get(local.i)].align),
+					edge = get(global.selectype_page_settings.selectype.decoration[get(local.i)].edge),
+					x = calc(global.selectype_page_settings.selectype.decoration[get(local.i)].x * global.scale),
+					y = calc(global.selectype_page_settings.selectype.decoration[get(local.i)].y * global.scale),
+					width = get(global.selectype_page_settings.selectype.decoration[get(local.i)].width),
+					height = get(global.selectype_page_settings.selectype.decoration[get(local.i)].height),
+					minwidth = get(global.selectype_page_settings.selectype.decoration[get(local.i)].minwidth),
+					maxwidth = get(global.selectype_page_settings.selectype.decoration[get(local.i)].maxwidth),
+					minheight = get(global.selectype_page_settings.selectype.decoration[get(local.i)].minheight),
+					maxheight = get(global.selectype_page_settings.selectype.decoration[get(local.i)].maxheight),
+					scale = get(global.scale),
+					rotate = get(global.selectype_page_settings.selectype.decoration[get(local.i)].rotate)
+				);
+				if(
+					<!-- condition -->
+					global.device.desktop
+					,
+					<!-- then-actions -->
+					calc(layer[get(local.name)].url, '%VIEWER%/project/' + global.pid + '/' + global.selectype_page_settings.selectype.decoration[get(local.i)].url.desktop);
+					,
+					<!-- else-if-condition -->
+					global.device.tablet
+					,
+					<!-- then-actions -->
+					calc(layer[get(local.name)].url, '%VIEWER%/project/' + global.pid + '/' + global.selectype_page_settings.selectype.decoration[get(local.i)].url.tablet);
+					,
+					<!-- else-if-condition -->
+					global.device.mobile
+					,
+					<!-- then-actions -->
+					calc(layer[get(local.name)].url, '%VIEWER%/project/' + global.pid + '/' + global.selectype_page_settings.selectype.decoration[get(local.i)].url.mobile);
+				);
+				,
+				<!-- else-if-condition -->
+				global.selectype_page_settings.selectype.decoration[get(local.i)].type == 'container'
+				,
+				<!-- then-actions -->
+				set(layer[get(local.name)],
+					type = 'container',
+					parent = get(caller.name),
+					enabled = 'false',
+					align = get(global.selectype_page_settings.selectype.decoration[get(local.i)].align),
+					edge = get(global.selectype_page_settings.selectype.decoration[get(local.i)].edge),
+					x = calc(global.selectype_page_settings.selectype.decoration[get(local.i)].x * global.scale),
+					y = calc(global.selectype_page_settings.selectype.decoration[get(local.i)].y * global.scale),
+					width = get(global.selectype_page_settings.selectype.decoration[get(local.i)].width),
+					height = get(global.selectype_page_settings.selectype.decoration[get(local.i)].height),
+					minwidth = get(global.selectype_page_settings.selectype.decoration[get(local.i)].minwidth),
+					maxwidth = get(global.selectype_page_settings.selectype.decoration[get(local.i)].maxwidth),
+					minheight = get(global.selectype_page_settings.selectype.decoration[get(local.i)].minheight),
+					maxheight = get(global.selectype_page_settings.selectype.decoration[get(local.i)].maxheight),
+					scale = get(global.scale),
+					rotate = get(global.selectype_page_settings.selectype.decoration[get(local.i)].rotate),
+					bgcolor = calc('0x' + global.selectype_page_settings.selectype.decoration[get(local.i)].bgcolor),
+					bgalpha = get(global.selectype_page_settings.selectype.decoration[get(local.i)].bgalpha),
+					bgborder = get(global.selectype_page_settings.selectype.decoration[get(local.i)].bgborder),
+					bgroundedge = get(global.selectype_page_settings.selectype.decoration[get(local.i)].bgroundedge),
+					bgshadow = get(global.selectype_page_settings.selectype.decoration[get(local.i)].bgshadow)
+				);
+				,
+				<!-- else-if-condition -->
+				global.selectype_page_settings.selectype.decoration[get(local.i)].type == 'text'
+				,
+				<!-- then-actions -->
+				set(layer[get(local.name)],
+					type = 'text',
+					parent = get(caller.name),
+					enabled = 'false',
+					align = get(global.selectype_page_settings.selectype.decoration[get(local.i)].align),
+					edge = get(global.selectype_page_settings.selectype.decoration[get(local.i)].edge),
+					x = calc(global.selectype_page_settings.selectype.decoration[get(local.i)].x * global.scale),
+					y = calc(global.selectype_page_settings.selectype.decoration[get(local.i)].y * global.scale),
+					width = get(global.selectype_page_settings.selectype.decoration[get(local.i)].width),
+					height = get(global.selectype_page_settings.selectype.decoration[get(local.i)].height),
+					scale = get(global.scale),
+					bgcolor = calc('0x' + global.selectype_page_settings.selectype.decoration[get(local.i)].bgcolor),
+					bgalpha = get(global.selectype_page_settings.selectype.decoration[get(local.i)].bgalpha),
+					bgborder = get(global.selectype_page_settings.selectype.decoration[get(local.i)].bgborder),
+					bgroundedge = get(global.selectype_page_settings.selectype.decoration[get(local.i)].bgroundedge),
+					bgshadow = get(global.selectype_page_settings.selectype.decoration[get(local.i)].bgshadow),
+					text = get(global.selectype_page_settings.selectype.decoration[get(local.i)].text),
+					css = calc('font-family:' + global.selectype_page_settings.selectype.decoration[get(local.i)].font_family + ';font-weight:' + global.selectype_page_settings.selectype.decoration[get(local.i)].font_weight + ';font-size:' + global.selectype_page_settings.selectype.decoration[get(local.i)].font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.decoration[get(local.i)].font_color)),
+					textalign = get(global.selectype_page_settings.selectype.decoration[get(local.i)].text_align)
+				);
+			);
+		);
+
+		<!--
+			selectype_page_unit_type_scrollarea_container layer 설정
+		-->
+		set(caller.childobjects[0],
+			align = get(global.selectype_page_settings.selectype.scrollarea.align),
+			edge = get(global.selectype_page_settings.selectype.scrollarea.edge),
+			x = get(global.selectype_page_settings.selectype.scrollarea.x),
+			y = get(global.selectype_page_settings.selectype.scrollarea.y),
+			width = get(global.selectype_page_settings.selectype.scrollarea.width),
+			height = get(global.selectype_page_settings.selectype.scrollarea.height),
+			minwidth = get(global.selectype_page_settings.selectype.scrollarea.minwidth),
+			maxwidth = get(global.selectype_page_settings.selectype.scrollarea.maxwidth),
+			minheight = get(global.selectype_page_settings.selectype.scrollarea.minheight),
+			maxheight = get(global.selectype_page_settings.selectype.scrollarea.maxheight),
+			bgcolor = calc('0x' + global.selectype_page_settings.selectype.scrollarea.bgcolor),
+			bgalpha = get(global.selectype_page_settings.selectype.scrollarea.bgalpha)
+		);
+	</action>
+
+	<action name="onlayout_selectype_page_unit_type_scrollarea_container" scope="local">
+		calc(caller.childobjects[0].width, caller.pixelwidth - global.selectype_page_settings.selectype.scrollarea.grip_width);
+		calc(caller.childobjects[1].width, global.selectype_page_settings.selectype.scrollarea.grip_width);
+
+		set(layer[selectype_page_unit_type_help_outer_frame],
+			x = calc(caller.stagex - 15 * global.scale),
+			y = calc(caller.stagey - 14 * global.scale)
+		);
+	</action>
+
+	<action name="onloaded_selectype_page_unit_type_scrollarea" scope="local">
+		set(caller,
+			childflowspacing = calc('0 ' + global.selectype_page_settings.selectype.scrollarea.horizontal_spacing * global.scale + ' ' + global.selectype_page_settings.selectype.scrollarea.vertical_spacing * global.scale + ' 0'),
+			childmargin = calc(global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgborder.top + ' ' + global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgborder.right + ' ' + global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgborder.bottom + ' ' + global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgborder.left)
+		);
+
+		for(
+			<!-- startactions -->
+			set(local.i, 0);
+			,
+			<!-- condition -->
+			local.i LT global.units.length
+			,
+			<!-- nextactions -->
+			inc(local.i);
+			,
+			<!-- loopactions -->
+			calc(local.name, caller.name + '_' + local.i);
+			addlayer(get(local.name));
+			layer[get(local.name)].loadstyle('style_selectype_page_unit_type_outer_frame');
+
+			set(layer[get(local.name)],
+				parent = get(caller.name),
+				width = get(global.selectype_page_settings.selectype.unit_type_outer_frame.width),
+				height = get(global.selectype_page_settings.selectype.unit_type_outer_frame.height),
+				scale = get(global.scale),
+				bgcolor = calc('0x' + global.selectype_page_settings.selectype.unit_type_outer_frame.normal.bgcolor),
+				bgalpha = get(global.selectype_page_settings.selectype.unit_type_outer_frame.normal.bgalpha),
+				bgroundedge = get(global.selectype_page_settings.selectype.unit_type_outer_frame.bgroundedge),
+				units_index = get(local.i),
+				type_name = get(global.units[get(local.i)].type),
+				type_value = get(global.units[get(local.i)].text),
+				type_title = get(global.units[get(local.i)].type_text),
+				exclusive_private_area = get(global.units[get(local.i)].exclusive_private_area),
+				supply_area = get(global.units[get(local.i)].supply_area),
+				exclusive_private_area_text = get(global.units[get(local.i)].exclusive_private_area_text),
+				supply_area_text = get(global.units[get(local.i)].supply_area_text),
+				area_unit_text = get(global.units[get(local.i)].area_unit_text),
+				activated_isometric_view = get(global.units[get(local.i)].activated_isometric_view),
+				activated_panoramic_view = get(global.units[get(local.i)].activated_panoramic_view)
+			);
+
+			if(
+				<!-- condition -->
+				!global.units[get(local.i)].activated_panoramic_view
+				,
+				<!-- then-actions -->
+				set(layer[get(local.name)].enabled, false);
+			);
+		);
+	</action>
+
+	<action name="onlayout_selectype_page_unit_type_scrollarea" scope="local">
+		set(layer[selectype_page_unit_type_vscrollbar_container].visible, calc(layer[get(caller.parent)].pixelheight GE caller.pixelheight ? false : true));
+	</action>
+
+	<action name="onoverflowchange_selectype_page_unit_type_scrollarea" scope="local">
+		if(
+			<!-- condition -->
+			caller.hoverflow GT 0
+			,
+			<!-- then-actions -->
+			set(layer[selectype_page_unit_type_vscrollbar_container].visible, true);
+			,
+			<!-- else-actions -->
+			set(layer[selectype_page_unit_type_vscrollbar_container].visible, false);
+		);
+	</action>
+
+	<action name="onloaded_selectype_page_unit_type_vscrollbar_grip" scope="local">
+		set(caller,
+			width = get(global.selectype_page_settings.selectype.scrollarea.grip_width),
+			height = get(global.selectype_page_settings.selectype.scrollarea.grip_height),
+			bgcolor = calc('0x' + global.selectype_page_settings.selectype.scrollarea.grip_color),
+			bgalpha = get(global.selectype_page_settings.selectype.scrollarea.grip_alpha),
+			bgroundedge = get(global.selectype_page_settings.selectype.scrollarea.grip_roundedge)
+		);
+	</action>
+
+	<action name="onover_selectype_page_unit_type_outer_frame" scope="local">
+		if(
+			<!-- condition -->
+			caller != null
+			,
+			<!-- then-actions -->
+			calc(caller.bgborder, global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgborder.top + ',' + global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgborder.right + ',' + global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgborder.bottom + ',' + global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgborder.left + ' 0x' + global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgborder.color + ' ' + global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgborder.alpha);
+			calc(caller.value_layer.css, 'font-family:' + global.selectype_page_settings.selectype.type_name_frame.value.font_family + ';font-weight:' + global.selectype_page_settings.selectype.type_name_frame.value.hovered.font_weight + ';font-size:' + global.selectype_page_settings.selectype.type_name_frame.value.hovered.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.type_name_frame.value.hovered.font_color));
+			calc(caller.title_layer.css, 'font-family:' + global.selectype_page_settings.selectype.type_name_frame.title.font_family + ';font-weight:' + global.selectype_page_settings.selectype.type_name_frame.title.hovered.font_weight + ';font-size:' + global.selectype_page_settings.selectype.type_name_frame.title.hovered.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.type_name_frame.title.hovered.font_color));
+
+			stoptween(caller.bgcolor, caller.bgalpha, caller.floor_plan_layer.scale);
+			tween(
+				<!-- variable -->
+				caller.bgcolor
+				,
+				<!-- value -->
+				calc('0x' + global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgcolor)
+				,
+				<!-- time -->
+				0.2
+			);
+			tween(
+				<!-- variable -->
+				caller.bgalpha
+				,
+				<!-- value -->
+				get(global.selectype_page_settings.selectype.unit_type_outer_frame.hovered.bgalpha)
+				,
+				<!-- time -->
+				0.2
+			);
+			tween(
+				<!-- variable -->
+				caller.floor_plan_layer.scale
+				,
+				<!-- value -->
+				get(global.selectype_page_settings.selectype.floor_plan.image.hovered_scale)
+				,
+				<!-- time -->
+				0.2
+			);
+		);
+	</action>
+
+	<action name="onout_selectype_page_unit_type_outer_frame" scope="local">
+		if(
+			<!-- condition -->
+			caller != null
+			,
+			<!-- then-actions -->
+			calc(caller.bgborder, global.selectype_page_settings.selectype.unit_type_outer_frame.normal.bgborder.top + ',' + global.selectype_page_settings.selectype.unit_type_outer_frame.normal.bgborder.right + ',' + global.selectype_page_settings.selectype.unit_type_outer_frame.normal.bgborder.bottom + ',' + global.selectype_page_settings.selectype.unit_type_outer_frame.normal.bgborder.left + ' 0x' + global.selectype_page_settings.selectype.unit_type_outer_frame.normal.bgborder.color + ' ' + global.selectype_page_settings.selectype.unit_type_outer_frame.normal.bgborder.alpha);
+			calc(caller.value_layer.css, 'font-family:' + global.selectype_page_settings.selectype.type_name_frame.value.font_family + ';font-weight:' + global.selectype_page_settings.selectype.type_name_frame.value.normal.font_weight + ';font-size:' + global.selectype_page_settings.selectype.type_name_frame.value.normal.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.type_name_frame.value.normal.font_color));
+			calc(caller.title_layer.css, 'font-family:' + global.selectype_page_settings.selectype.type_name_frame.title.font_family + ';font-weight:' + global.selectype_page_settings.selectype.type_name_frame.title.normal.font_weight + ';font-size:' + global.selectype_page_settings.selectype.type_name_frame.title.normal.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.type_name_frame.title.normal.font_color));
+
+			stoptween(caller.bgcolor, caller.bgalpha, caller.floor_plan_layer.scale);
+			tween(
+				<!-- variable -->
+				caller.bgcolor
+				,
+				<!-- value -->
+				calc('0x' + global.selectype_page_settings.selectype.unit_type_outer_frame.normal.bgcolor)
+				,
+				<!-- time -->
+				0.2
+			);
+			tween(
+				<!-- variable -->
+				caller.bgalpha
+				,
+				<!-- value -->
+				get(global.selectype_page_settings.selectype.unit_type_outer_frame.normal.bgalpha)
+				,
+				<!-- time -->
+				0.2
+			);
+			tween(
+				<!-- variable -->
+				caller.floor_plan_layer.scale
+				,
+				<!-- value -->
+				get(global.selectype_page_settings.selectype.floor_plan.image.normal_scale)
+				,
+				<!-- time -->
+				0.2
+			);
+		);
+	</action>
+
+	<action name="onclick_selectype_page_unit_type_outer_frame" scope="local">
+		if(
+			<!-- condition -->
+			!isset(global.option_states)
+			,
+			<!-- then-actions -->
+			def(global.option_states, array);
+			add_array_support(global.option_states);
+			for(
+				<!-- startactions -->
+				set(local.i, 0);
+				,
+				<!-- condition -->
+				local.i LT global.panoramic_page_settings.option.title.length
+				,
+				<!-- nextactions -->
+				inc(local.i);
+				,
+				<!-- loopactions -->
+				global.option_states.push(0);
+			);
+			,
+			<!-- else-actions -->
+			for(
+				<!-- startactions -->
+				set(local.i, 0);
+				,
+				<!-- condition -->
+				local.i LT global.panoramic_page_settings.option.title.length
+				,
+				<!-- nextactions -->
+				inc(local.i);
+				,
+				<!-- loopactions -->
+				set(global.option_states[get(local.i)], 0);
+			);
+		);
+		if(
+			<!-- condition -->
+			global.units_index != caller.units_index
+			,
+			<!-- then-actions -->
+			for(
+				<!-- startactions -->
+				set(local.i, 0);
+				,
+				<!-- condition -->
+				local.i LT global.option_states.length
+				,
+				<!-- nextactions -->
+				inc(local.i);
+				,
+				<!-- loopactions -->
+				set(global.option_states[get(local.i)], 0);
+			);
+		);
+
+		set(global.units_index, get(caller.units_index));
+		loadpano('%VIEWER%/insite-ol/spaceoption.xml');
+	</action>
+
+	<action name="onloaded_selectype_page_unit_type_outer_frame" scope="local">
+		<!--
+			selectype_page_unit_type_outer_frame 내에
+			단위세대 TYPE, 평면도, 전용면적 등의 정보를 표시하는
+			selectype_page_type_info_frame layer 설정
+		-->
+		calc(local.type_info_name, caller.name + '_type_info_frame');
+		addlayer(get(local.type_info_name));
+		layer[get(local.type_info_name)].loadstyle('style_selectype_page_type_info_frame');
+		set(layer[get(local.type_info_name)],
+			parent = get(caller.name),
+			width = get(global.selectype_page_settings.selectype.type_info_frame.width),
+			height = get(global.selectype_page_settings.selectype.type_info_frame.height),
+			bgcolor = get(global.selectype_page_settings.selectype.type_info_frame.bgcolor),
+			bgalpha = get(global.selectype_page_settings.selectype.type_info_frame.alpha)
+		);
+
+
+		calc(local.type_name_frame, caller.name + '_type_name_frame');
+		addlayer(get(local.type_name_frame));
+		layer[get(local.type_name_frame)].loadstyle('style_selectype_page_type_name_frame');
+		set(layer[get(local.type_name_frame)],
+			parent = get(local.type_info_name),
+			x = get(global.selectype_page_settings.selectype.type_name_frame.x),
+			y = get(global.selectype_page_settings.selectype.type_name_frame.y),
+			width = get(global.selectype_page_settings.selectype.type_name_frame.width),
+			height = get(global.selectype_page_settings.selectype.type_name_frame.height)
+		);
+
+		calc(local.type_name_value, caller.name + '_type_name_value');
+		addlayer(get(local.type_name_value));
+		layer[get(local.type_name_value)].loadstyle('style_selectype_page_type_name_value');
+		set(layer[get(local.type_name_value)],
+			parent = get(local.type_name_frame),
+			align = get(global.selectype_page_settings.selectype.type_name_frame.value.align),
+			edge = get(global.selectype_page_settings.selectype.type_name_frame.value.edge),
+			y = get(global.selectype_page_settings.selectype.type_name_frame.value.y),
+			text = (get(caller.type_value)),
+			css = calc('font-family:' + global.selectype_page_settings.selectype.type_name_frame.value.font_family + ';font-weight:' + global.selectype_page_settings.selectype.type_name_frame.value.normal.font_weight + ';font-size:' + global.selectype_page_settings.selectype.type_name_frame.value.normal.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.type_name_frame.value.normal.font_color))
+		);
+
+		calc(local.type_name_title, caller.name + '_type_name_title');
+		addlayer(get(local.type_name_title));
+		layer[get(local.type_name_title)].loadstyle('style_selectype_page_type_name_title');
+		set(layer[get(local.type_name_title)],
+			parent = get(local.type_name_frame),
+			y = get(global.selectype_page_settings.selectype.type_name_frame.title.y),
+			text = (get(caller.type_title)),
+			css = calc('font-family:' + global.selectype_page_settings.selectype.type_name_frame.title.font_family + ';font-weight:' + global.selectype_page_settings.selectype.type_name_frame.title.normal.font_weight + ';font-size:' + global.selectype_page_settings.selectype.type_name_frame.title.normal.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.type_name_frame.title.normal.font_color))
+		);
+		copy(layer[get(local.type_name_title)].value_layer, layer[get(local.type_name_value)]);
+		copy(caller.value_layer, layer[get(local.type_name_value)]);
+		copy(caller.title_layer, layer[get(local.type_name_title)]);
+
+
+		calc(local.floor_plan_frame, caller.name + '_floor_plan_frame');
+		addlayer(get(local.floor_plan_frame));
+		set(layer[get(local.floor_plan_frame)],
+			type = 'container',
+			parent = get(local.type_info_name),
+			x = get(global.selectype_page_settings.selectype.floor_plan.x),
+			y = get(global.selectype_page_settings.selectype.floor_plan.y),
+			width = get(global.selectype_page_settings.selectype.floor_plan.width),
+			height = get(global.selectype_page_settings.selectype.floor_plan.height)
+		);
+
+		calc(local.floor_plan_image, caller.name + '_floor_plan_image');
+		addlayer(get(local.floor_plan_image));
+		set(layer[get(local.floor_plan_image)],
+			type = 'image',
+			parent = get(local.floor_plan_frame),
+			url = calc('%VIEWER%/project/' + global.pid + '/master/' + tolower(caller.type_name) + '_' + global.salemode + '.png'),
+			align = get(global.selectype_page_settings.selectype.floor_plan.image.align),
+			edge = get(global.selectype_page_settings.selectype.floor_plan.image.edge),
+			x = get(global.selectype_page_settings.selectype.floor_plan.image.x),
+			y = get(global.selectype_page_settings.selectype.floor_plan.image.y),
+			scale = get(global.selectype_page_settings.selectype.floor_plan.image.normal_scale)
+		);
+		copy(caller.floor_plan_layer, layer[get(local.floor_plan_image)]);
+
+
+		calc(local.exclusive_private_area_frame, caller.name + '_exclusive_private_area_frame');
+		addlayer(get(local.exclusive_private_area_frame));
+		layer[get(local.exclusive_private_area_frame)].loadstyle('style_selectype_page_area_frame');
+		set(layer[get(local.exclusive_private_area_frame)],
+			parent = get(local.type_info_name),
+			x = get(global.selectype_page_settings.selectype.exclusive_private_area_frame.x),
+			y = get(global.selectype_page_settings.selectype.exclusive_private_area_frame.y),
+			width = get(global.selectype_page_settings.selectype.exclusive_private_area_frame.width),
+			height = get(global.selectype_page_settings.selectype.exclusive_private_area_frame.height)
+		);
+
+		calc(local.exclusive_private_area_title, caller.name + '_exclusive_private_area_title');
+		addlayer(get(local.exclusive_private_area_title));
+		set(layer[get(local.exclusive_private_area_title)],
+			type = 'text',
+			parent = get(local.exclusive_private_area_frame),
+			bgalpha = '0.0',
+			text = get(caller.exclusive_private_area_text),
+			css = calc('font-family:' + global.selectype_page_settings.selectype.exclusive_private_area_frame.font_family + ';font-weight:' + global.selectype_page_settings.selectype.exclusive_private_area_frame.font_weight + ';font-size:' + global.selectype_page_settings.selectype.exclusive_private_area_frame.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.exclusive_private_area_frame.font_color))
+		);
+
+		calc(local.exclusive_private_area_value, caller.name + '_exclusive_private_area_value');
+		addlayer(get(local.exclusive_private_area_value));
+		set(layer[get(local.exclusive_private_area_value)],
+			type = 'text',
+			parent = get(local.exclusive_private_area_frame),
+			bgalpha = '0.0',
+			text = get(caller.exclusive_private_area),
+			css = calc('font-family:' + global.selectype_page_settings.selectype.exclusive_private_area_frame.font_family + ';font-weight:' + global.selectype_page_settings.selectype.exclusive_private_area_frame.font_weight + ';font-size:' + global.selectype_page_settings.selectype.exclusive_private_area_frame.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.exclusive_private_area_frame.font_color))
+		);
+
+		calc(local.exclusive_private_area_unit, caller.name + '_exclusive_private_area_unit');
+		addlayer(get(local.exclusive_private_area_unit));
+		set(layer[get(local.exclusive_private_area_unit)],
+			type = 'text',
+			parent = get(local.exclusive_private_area_frame),
+			bgalpha = '0.0',
+			text = get(caller.area_unit_text),
+			css = calc('font-family:' + global.selectype_page_settings.selectype.exclusive_private_area_frame.font_family + ';font-weight:' + global.selectype_page_settings.selectype.exclusive_private_area_frame.font_weight + ';font-size:' + global.selectype_page_settings.selectype.exclusive_private_area_frame.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.exclusive_private_area_frame.font_color))
+		);
+
+
+		calc(local.supply_area_frame, caller.name + '_supply_area_frame');
+		addlayer(get(local.supply_area_frame));
+		layer[get(local.supply_area_frame)].loadstyle('style_selectype_page_area_frame');
+		set(layer[get(local.supply_area_frame)],
+			parent = get(local.type_info_name),
+			x = get(global.selectype_page_settings.selectype.supply_area_frame.x),
+			y = get(global.selectype_page_settings.selectype.supply_area_frame.y),
+			width = get(global.selectype_page_settings.selectype.supply_area_frame.width),
+			height = get(global.selectype_page_settings.selectype.supply_area_frame.height)
+		);
+
+		calc(local.supply_area_title, caller.name + '_supply_area_title');
+		addlayer(get(local.supply_area_title));
+		set(layer[get(local.supply_area_title)],
+			type = 'text',
+			parent = get(local.supply_area_frame),
+			bgalpha = '0.0',
+			text = get(caller.supply_area_text),
+			css = calc('font-family:' + global.selectype_page_settings.selectype.supply_area_frame.font_family + ';font-weight:' + global.selectype_page_settings.selectype.supply_area_frame.font_weight + ';font-size:' + global.selectype_page_settings.selectype.supply_area_frame.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.supply_area_frame.font_color))
+		);
+
+		calc(local.supply_area_value, caller.name + '_supply_area_value');
+		addlayer(get(local.supply_area_value));
+		set(layer[get(local.supply_area_value)],
+			type = 'text',
+			parent = get(local.supply_area_frame),
+			bgalpha = '0.0',
+			text = get(caller.supply_area),
+			css = calc('font-family:' + global.selectype_page_settings.selectype.supply_area_frame.font_family + ';font-weight:' + global.selectype_page_settings.selectype.supply_area_frame.font_weight + ';font-size:' + global.selectype_page_settings.selectype.supply_area_frame.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.supply_area_frame.font_color))
+		);
+
+		calc(local.supply_area_unit, caller.name + '_supply_area_unit');
+		addlayer(get(local.supply_area_unit));
+		set(layer[get(local.supply_area_unit)],
+			type = 'text',
+			parent = get(local.supply_area_frame),
+			bgalpha = '0.0',
+			text = get(caller.area_unit_text),
+			css = calc('font-family:' + global.selectype_page_settings.selectype.supply_area_frame.font_family + ';font-weight:' + global.selectype_page_settings.selectype.supply_area_frame.font_weight + ';font-size:' + global.selectype_page_settings.selectype.supply_area_frame.font_size + 'px;color:#' + get(global.selectype_page_settings.selectype.supply_area_frame.font_color))
+		);
+	</action>
+
+	<action name="onlayout_selectype_page_type_name_title" scope="local">
+		asyncloop(
+			<!-- condition -->
+			caller.value_layer.pixelwidth == 0
+			,
+			<!-- loopactions -->
+			,
+			<!-- doneactions -->
+			set(caller.x, get(caller.value_layer.pixelwidth));
+		);
+	</action>
+
+</krpano>

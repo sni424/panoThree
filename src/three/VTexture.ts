@@ -1,67 +1,42 @@
 import * as THREE from "three";
-
-import penthouse1_1k from "/1k/penthouse1.jpg?url";
-import gate_1k from "/1k/gate.jpg?url";
-import penthouse_1k from "/1k/penthouse.jpg?url";
-import room2_1k from "/1k/room2.jpg?url";
-import room3_1k from "/1k/room3.jpg?url";
-import room1_1k from "/1k/room1.jpg?url";
-
-import penthouse1_4k from "/penthouse1.jpg?url";
-import gate_4k from "/gate.jpg?url";
-import penthouse_4k from "/penthouse.jpg?url";
-import room1_4k from "/room1.jpg?url";
-import room2_4k from "/room2.jpg?url";
-import room3_4k from "/room3.jpg?url";
+import type { texturePaths } from "@/type";
 import gsap from "gsap";
 
 export default class VTexture {
-  constructor(scene) {
+  private _scene: THREE.Scene;
+  private _currentIndex: number;
+  private _textureLoader: THREE.TextureLoader;
+  private _textures_1k: string[];
+  private _textures_4k: string[];
+  private material: THREE.ShaderMaterial;
+  private mesh: THREE.Mesh;
+  private currentTextureIndex: number = 0;
+  private isTransitioning: boolean = false;
+
+  constructor(scene: THREE.Scene, texturePaths: texturePaths) {
     this._scene = scene;
-    // this._textures = [room1, room2, room3, gate, penthouse, penthouse1];
     this._currentIndex = 0;
-
     this._textureLoader = new THREE.TextureLoader();
-    // 1. 저화질/고화질 텍스처 경로를 별도로 관리합니다.
-    this._textures_1k = [
-      room1_1k,
-      room2_1k,
-      room3_1k,
-      gate_1k,
-      penthouse_1k,
-      penthouse1_1k,
-    ];
-    this._textures_4k = [
-      room1_4k,
-      room2_4k,
-      room3_4k,
-      gate_4k,
-      penthouse_4k,
-      penthouse1_4k,
-    ];
 
-    // 저화질 먼저, 완료되면 고화질로 교체
+    this._textures_1k = texturePaths.lowQuality;
+    this._textures_4k = texturePaths.highQuality;
+
+    // 저화질 먼저, 완료되면 고화질로 교체 (첫 번째 텍스처 로드)
     const initialLowResTexture = this._textureLoader.load(
       this._textures_1k[0],
-      (lowResTex) => {
-        this._textureLoader.load(this._textures_4k[0], (highResTex) => {
-          this.material.uniforms.texture1.value = highResTex;
-          this.material.uniforms.texture2.value = highResTex;
-          lowResTex.dispose();
-        });
+      (lowResTex: THREE.Texture) => {
+        this._textureLoader.load(
+          this._textures_4k[0],
+          (highResTex: THREE.Texture) => {
+            this.material.uniforms.texture1.value = highResTex;
+            this.material.uniforms.texture2.value = highResTex;
+            lowResTex.dispose();
+          }
+        );
       }
     );
 
     const geometry = new THREE.SphereGeometry(500, 60, 40);
-
-    this.currentTextureIndex = 0; // 현재 텍스처 인덱스
-    this.isTransitioning = false;
-
-    // 초기 텍스처 로드
-    // this.currentTexture = new THREE.TextureLoader().load(this._textures[0]);
-    this._textureLoader = new THREE.TextureLoader();
-
-    // 셰이더 재질 생성
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         progress: { value: 0 },
@@ -95,7 +70,7 @@ export default class VTexture {
     this._scene.add(this.mesh);
   }
 
-  changeImageShader(index) {
+  changeImageShader(index: number) {
     // 전환 중이면 무시
     if (this.isTransitioning) {
       return console.warn("아직 변경중");
@@ -109,10 +84,10 @@ export default class VTexture {
     const lowResUrl = this._textures_1k[nextIndex];
     const highResUrl = this._textures_4k[nextIndex];
 
-    let highResTextureResult = null;
+    let highResTextureResult: THREE.Texture | null = null;
     let isTransitionAnimationComplete = false;
     // 1. 고화질 텍스처 로드 (백그라운드에서 진행)
-    this._textureLoader.load(highResUrl, (highResTexture) => {
+    this._textureLoader.load(highResUrl, (highResTexture: THREE.Texture) => {
       // 고화질 로드 완료 시
 
       highResTextureResult = highResTexture;
@@ -127,7 +102,7 @@ export default class VTexture {
     });
 
     // 2. 저화질 텍스처 로드 및 애니메이션 시작
-    this._textureLoader.load(lowResUrl, (lowResTexture) => {
+    this._textureLoader.load(lowResUrl, (lowResTexture: THREE.Texture) => {
       this.material.uniforms.texture2.value = lowResTexture;
 
       gsap.to(this.material.uniforms.progress, {

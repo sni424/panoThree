@@ -1,4 +1,4 @@
-import "./uiCollection.css";
+import "../css/uiCollection.css";
 
 const roomList = [
   { name: "주방", index: 1 },

@@ -1,0 +1,11 @@
+<krpano	page_name="estimate"
+		>
+
+	<include url="%VIEWER%/insite-ol/login.xml"/>
+	<include url="%VIEWER%/insite-ol/progressbar.xml"/>
+	<include url="%VIEWER%/insite-ol/selectype.xml"/>
+
+	<action autorun="onstart" scope="local">
+	</action>
+
+</krpano>
