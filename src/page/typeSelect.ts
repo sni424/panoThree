@@ -173,11 +173,12 @@ const createCardGrid = (
   scrollArea.style.paddingTop = "2px";
 
   // 4. unitsData를 순회하며 각 유닛의 카드를 생성
-  unitsData.units.forEach((unit) => {
+  unitsData.units.forEach((unit, index) => {
     // 5. 개별 카드(unit_type_outer_frame) 생성
     const card = document.createElement("div");
     scrollArea.appendChild(card);
-    card.id = "card";
+    card.id = `card_${index + 1}`;
+    console.log("card", card);
 
     // 6. 카드 기본 스타일 적용
     card.style.width = `${cardStyle.width}px`;
@@ -328,6 +329,13 @@ const typeSelectUi = (
     element
   );
   bottomTree(selectTypeData.selectype_page_settings.progressbar, element);
+
+  const loginButton = document.getElementById("card_1") as HTMLButtonElement;
+
+  loginButton.addEventListener("click", () => {
+    // 로그인 검증 로직 성공 후 이동
+    window.location.href = "/?pid=bongmyeong&page=estimate/tour";
+  });
 };
 
 export default typeSelectUi;

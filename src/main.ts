@@ -1,9 +1,15 @@
 import Core from "./core.js";
 import VJsonManager from "./loader/VJsonManager.js";
-import login from "./page/login.ts";
 import login2 from "./page/login2.ts";
 import typeSelectUi from "./page/typeSelect.ts";
-import type { LoginPageSettings, SelectType, UnitArrayType } from "./type.ts";
+import type {
+  LoginPageSettings,
+  SelectJsonType,
+  UnitArrayType,
+} from "./type.ts";
+import type { HotSpotListType } from "./types/hotSpotType.ts";
+import type { MarkerListType } from "./types/markerType.ts";
+import uiCollection from "./ui/uiCollection.ts";
 
 const filesToLoad = {
   ui: "./json/insite-ui.json",
@@ -22,8 +28,10 @@ function main() {
 
     const core = new Core("container", jsonManager);
     const loginData = jsonManager.get("login") as LoginPageSettings;
-    const selectTypeData = jsonManager.get("selectType") as SelectType;
+    const selectTypeData = jsonManager.get("selectType") as SelectJsonType;
     const unitsData = jsonManager.get("units") as UnitArrayType;
+    const hotspotsData = jsonManager.get("hotspots") as HotSpotListType;
+    const moveSpotsData = jsonManager.get("moveSpots") as MarkerListType;
     // core.init3D();
 
     // 5. 로드된 데이터를 사용해 Hotspot과 MoveSpot 추가
@@ -65,6 +73,31 @@ function main() {
       login2(loginData);
     } else if (page === "estimate/type") {
       typeSelectUi(selectTypeData, unitsData);
+    } else if (page === "estimate/tour") {
+      core.init3D();
+      uiCollection(core);
+      if (hotspotsData) {
+        hotspotsData.forEach((data) => {
+          core.VHotspots.addDivHotSpot(
+            data.position,
+            data.style,
+            `/${data.image}`,
+            data.room
+          );
+        });
+      }
+
+      if (moveSpotsData) {
+        moveSpotsData.forEach((data) => {
+          core.VMoveSpots.addDivMoveSpot(
+            data.position,
+            data.style,
+            `/${data.image}`,
+            data.from,
+            data.to
+          );
+        });
+      }
     }
     // uiCollection(core);
     // login2(loginData);
