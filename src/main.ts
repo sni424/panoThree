@@ -65,11 +65,12 @@ const preloadImages = (images: string[]) => {
   return Promise.all(
     images.map(
       (src) =>
-        new Promise((resolve) => {
+        new Promise<void>((resolve) => {
           const img = new Image();
+          img.decoding = "async";
           img.src = src;
-          img.onload = resolve;
-          img.onerror = resolve; // 에러나도 resolve 해서 진행 막히지 않게
+          img.onload = () => resolve();
+          img.onerror = () => resolve(); // 실패해도 진행 막지 않음
         })
     )
   );
@@ -77,27 +78,29 @@ const preloadImages = (images: string[]) => {
 
 function main() {
   (async () => {
+    const params = new URLSearchParams(window.location.search);
+    const page = params.get("page");
+    if (!page) {
+      window.location.href = "/?pid=bongmyeong&page=estimate/login";
+      return; // 여기서 끝내야 아래 코드 실행 안 됨
+    }
     const jsonManager = await VJsonManager.create(filesToLoad);
-
+    console.log("코어 생성");
     const core = new Core("container", jsonManager);
+    console.log("json 가져오기");
     const loginData = jsonManager.get("login") as LoginPageSettings;
     const selectTypeData = jsonManager.get("selectType") as SelectJsonType;
     const unitsData = jsonManager.get("units") as UnitArrayType;
     const hotspotsData = jsonManager.get("hotspots") as HotSpotListType;
     const moveSpotsData = jsonManager.get("moveSpots") as MarkerListType;
-
-    const params = new URLSearchParams(window.location.search);
-    const page = params.get("page");
-
-    await preloadImages(preloadList);
-
-    if (!page) {
-      window.location.href = "/?pid=bongmyeong&page=estimate/login";
-      return; // 여기서 끝내야 아래 코드 실행 안 됨
-    }
+    console.log("json 로드 끝");
 
     if (page === "estimate/login") {
+      // 🚀 프리로드를 **백그라운드에서 시작**(대기하지 않음)
+      const preloadTask = preloadImages(preloadList);
+      await preloadImages([bgimage]);
       login2(loginData);
+      void preloadTask;
     } else if (page === "estimate/type") {
       typeSelectUi(selectTypeData, unitsData);
     } else if (page === "estimate/tour") {
