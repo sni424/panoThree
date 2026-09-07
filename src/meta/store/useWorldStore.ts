@@ -16,17 +16,25 @@ interface WorldState {
   playerPosition: Vec3;
   /** 지금 들어가 있는 존의 id. 없으면 null */
   activeZoneId: string | null;
+  /**
+   * 춤추는 중인지. HUD 버튼으로 켜고, 캐릭터가 움직이거나 점프하면 Player가 끈다.
+   * (Canvas 밖의 버튼과 Canvas 안의 캐릭터를 잇는 값이라 스토어에 둔다)
+   */
+  dancing: boolean;
 
   setNickname: (nickname: string) => void;
   setPlayerPosition: (position: Vec3) => void;
   setActiveZoneId: (zoneId: string | null) => void;
+  setDancing: (dancing: boolean) => void;
 }
 
 export const useWorldStore = create<WorldState>((set) => ({
   nickname: "게스트",
   playerPosition: [0, 0, 0],
   activeZoneId: null,
+  dancing: false,
   setNickname: (nickname) => set({ nickname }),
   setPlayerPosition: (playerPosition) => set({ playerPosition }),
   setActiveZoneId: (activeZoneId) => set({ activeZoneId }),
+  setDancing: (dancing) => set({ dancing }),
 }));

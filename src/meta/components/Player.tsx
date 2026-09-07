@@ -21,6 +21,7 @@ import {
   MAX_PHYSICS_DELTA,
   MAX_SLOPE_CLIMB_ANGLE,
   MIN_SLOPE_SLIDE_ANGLE,
+  MOVE_DEADZONE,
   PLAYER_START,
   RESPAWN_Y,
   RUN_SPEED,
@@ -34,8 +35,9 @@ import { useKeyboard } from "@/meta/hooks/useKeyboard";
 import { usePhysics } from "@/meta/physics/PhysicsContext";
 import { clampToWalkableArea } from "@/meta/physics/walkableArea";
 import { playerPosition } from "@/meta/state/playerTransform";
+import { touchInput } from "@/meta/state/touchInput";
 import { useWorldStore } from "@/meta/store/useWorldStore";
-import type { Vec3 } from "@/meta/types";
+import type { CharacterAnimation, Vec3 } from "@/meta/types";
 
 import Character from "./Character";
 
@@ -72,13 +74,15 @@ export default function Player() {
   /** 씬의 카메라 (이동 방향 기준을 잡는 데 사용) */
   const camera = useThree((state) => state.camera);
 
-  /** 이동 중인지 여부 — Character에 넘겨 애니메이션 재생/정지를 결정한다 */
-  const [moving, setMoving] = useState(false);
+  /** 지금 재생 중인 동작 — Character에 넘긴다 */
+  const [animation, setAnimation] = useState<CharacterAnimation>("idle");
 
   const { RAPIER, world, collisionReady } = usePhysics();
 
   const setPlayerPosition = useWorldStore((s) => s.setPlayerPosition);
   const setActiveZoneId = useWorldStore((s) => s.setActiveZoneId);
+  const dancing = useWorldStore((s) => s.dancing);
+  const setDancing = useWorldStore((s) => s.setDancing);
 
   /* --- 물리 객체 (effect에서 만들고 언마운트 때 지운다) -------------------- */
   const bodyRef = useRef<RigidBody | null>(null);
@@ -169,30 +173,36 @@ export default function Player() {
       .set(-cameraForward.current.z, 0, cameraForward.current.x)
       .normalize();
 
-    /* --- 2. 키 입력을 수평 이동량으로 바꾸기 ---------------------------- */
-    const forwardInput = (k.forward ? 1 : 0) - (k.backward ? 1 : 0);
-    const rightInput = (k.right ? 1 : 0) - (k.left ? 1 : 0);
+    /* --- 2. 키보드 + 조이스틱 입력을 수평 이동량으로 바꾸기 -------------- */
+    // 둘을 그냥 더한다. 키보드는 0 아니면 ±1이고 조이스틱은 -1~1 사이의
+    // 아날로그 값이라, 동시에 쓰지 않는 한 서로 방해하지 않는다.
+    const forwardInput = (k.forward ? 1 : 0) - (k.backward ? 1 : 0) + touchInput.y;
+    const rightInput = (k.right ? 1 : 0) - (k.left ? 1 : 0) + touchInput.x;
 
     const direction = moveDirection.current.set(0, 0, 0);
     direction.addScaledVector(cameraForward.current, forwardInput);
     direction.addScaledVector(cameraRight.current, rightInput);
 
-    const isMoving = direction.lengthSq() > 0;
+    // 조이스틱을 아주 살짝 건드린 정도는 무시한다
+    const isMoving = direction.length() > MOVE_DEADZONE;
 
     if (isMoving) {
-      // normalize: 대각선 이동이 더 빨라지지 않게
+      // normalize: 대각선 이동이나 조이스틱을 민 정도와 무관하게 속도를 일정하게 —
+      // PC와 모바일의 이동 속도가 정확히 같아진다
       direction.normalize();
       // 캐릭터가 가는 쪽을 바라보게 회전 (atan2로 방향 → 각도)
       player.rotation.y = Math.atan2(direction.x, direction.z);
 
-      const speed = k.run ? RUN_SPEED : WALK_SPEED;
+      // 키보드 Shift 또는 모바일 부스터 버튼
+      const speed = k.run || touchInput.run ? RUN_SPEED : WALK_SPEED;
       // 공중에서는 조작을 덜 먹게 해서 점프 궤적이 헬리콥터처럼 되지 않게 한다
       const control = grounded.current ? 1 : AIR_CONTROL;
       direction.multiplyScalar(speed * control * dt);
     }
 
     /* --- 3. 점프와 중력 ------------------------------------------------- */
-    const jumpPressed = Boolean(k.jump);
+    // 키보드 Space 또는 모바일 점프 버튼
+    const jumpPressed = Boolean(k.jump) || touchInput.jump;
     // 눌린 "순간"에만 점프한다. 계속 누르고 있어도 착지하자마자 다시 뛰지 않는다.
     // verticalVelocity <= 0 조건은 점프 직후 아직 올라가는 중일 때의 이중 점프를 막는다.
     if (
@@ -225,6 +235,20 @@ export default function Player() {
     if (grounded.current && verticalVelocity.current < 0) {
       verticalVelocity.current = 0;
     }
+
+    /* --- 4-1. 지금 어떤 동작을 재생할지 결정 ---------------------------- */
+    // 걷거나 점프하면 춤은 자동으로 그만둔다
+    if (dancing && (isMoving || jumpPressed)) setDancing(false);
+
+    const nextAnimation: CharacterAnimation = !grounded.current
+      ? "jump" // 점프 중이거나 떨어지는 중
+      : dancing
+        ? "dance"
+        : isMoving
+          ? "walk"
+          : "idle";
+    // 값이 바뀔 때만 setState (매 프레임 리렌더를 피한다)
+    if (nextAnimation !== animation) setAnimation(nextAnimation);
 
     /* --- 5. 강체를 옮긴다 (실제 반영은 PhysicsStepper의 world.step()에서) -- */
     const current = body.translation();
@@ -260,8 +284,6 @@ export default function Player() {
 
     /* --- 8. UI용 상태 갱신 (초당 10회로 제한) --------------------------- */
     elapsedSinceReport.current += delta;
-    // 이동 시작/정지는 애니메이션과 직결되므로 주기와 상관없이 즉시 반영
-    if (isMoving !== moving) setMoving(isMoving);
     if (elapsedSinceReport.current < STORE_UPDATE_INTERVAL) return;
     elapsedSinceReport.current = 0;
 
@@ -283,7 +305,7 @@ export default function Player() {
 
   return (
     <group ref={group} position={PLAYER_START}>
-      <Character moving={moving} />
+      <Character animation={animation} />
     </group>
   );
 }

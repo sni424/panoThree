@@ -20,7 +20,7 @@ export const MODELS = {
   map: "/model/adventure_map.glb",
   /** 물리 전용 저폴리 맵 (410KB, 25,137삼각형) — 화면에는 그려지지 않는다 */
   collision: "/model/collision-map.glb",
-  character: "/model/cute_cat.glb",
+  character: "/model/cat-animated.glb",
 } as const;
 
 /* ---------------------------------------------------------------------------
@@ -31,8 +31,11 @@ export const MODELS = {
 export const MAP_SCALE = 0.01;
 
 /* ---------------------------------------------------------------------------
- * 캐릭터(cute_cat.glb) 보정값
- * 원본은 높이 2.149유닛이고, 원점이 발밑이 아니라 y=+3.752 위치에 있다.
+ * 캐릭터(cat-animated.glb) 보정값
+ *
+ * 스킨 메시라 GLB의 정점 좌표를 그대로 읽으면 안 되고, 본의 글로벌 행렬과
+ * inverseBindMatrix를 곱해 실제 렌더링되는 자세를 계산해야 한다. 그렇게 재면
+ * 정지 자세와 클립 3개가 모두 높이 2.149 / 발 위치 y=+3.752로 일치한다.
  * ------------------------------------------------------------------------ */
 
 /** 캐릭터 확대 배율. 1.5 → 키 약 3.2유닛 (도로 폭 11유닛 기준으로 적당한 크기) */
@@ -43,6 +46,31 @@ export const CHARACTER_Y_OFFSET = -3.752 * CHARACTER_SCALE;
 
 /** 모델이 바라보는 축을 +Z(진행 방향)에 맞추기 위한 보정 회전(라디안). 이 모델은 보정 불필요 */
 export const CHARACTER_ROTATION_OFFSET = 0;
+
+/**
+ * GLB 안에 들어 있는 애니메이션 클립 이름.
+ * 모델을 다시 뽑아서 이름이 바뀌면 여기만 고치면 된다.
+ */
+export const CHARACTER_CLIPS = {
+  /** 걷기/달리기 (3.33초) */
+  walk: "metarigAction.001",
+  /** 점프 (2.04초) */
+  jump: "Cat_Jump",
+  /** 춤 (11.04초) */
+  dance: "Cat_Dance",
+} as const;
+
+/**
+ * 가만히 서 있을 때 쓸 클립.
+ *
+ * 이 GLB에는 전용 idle 클립이 없어서 걷기 클립을 첫 프레임에 정지시켜 쓴다.
+ * 아무 클립도 재생하지 않아도 정지 자세는 멀쩡하지만, 점프처럼 한 번만 재생되는
+ * 클립에서 빠져나올 때 어떤 자세로 돌아갈지가 믹서 내부 상태에 좌우된다.
+ * 클립을 명시적으로 붙들고 있으면 항상 같은 자세가 보장된다.
+ *
+ * 나중에 Idle 클립을 만들어 넣으면 여기만 그 이름으로 바꾸면 된다.
+ */
+export const CHARACTER_IDLE_CLIP: string = CHARACTER_CLIPS.walk;
 
 /* ---------------------------------------------------------------------------
  * 카메라 설정 (캐릭터를 중심으로 공전하는 3인칭 카메라)
@@ -120,6 +148,25 @@ export const JUMP_SPEED = 14;
 export const MAX_FALL_SPEED = -60;
 
 /**
+ * 점프 한 번의 체공 시간(초) = 2 × JUMP_SPEED / |GRAVITY| ≈ 0.82초.
+ * 점프 애니메이션의 재생 속도를 여기에 맞추므로,
+ * 중력이나 점프 속도를 바꿔도 애니메이션이 자동으로 따라온다.
+ */
+export const JUMP_AIRTIME = (2 * JUMP_SPEED) / -GRAVITY;
+
+/**
+ * 점프 클립(Cat_Jump, 2.04초)에서 실제로 발이 떠 있는 구간.
+ *
+ * 클립 앞뒤에 가만히 서 있는 프레임이 각각 0.42초 / 0.54초씩 붙어 있다.
+ * 클립을 처음부터 틀면 물리적으로는 이미 떠올랐는데 모델은 아직 서 있는
+ * 어색한 순간이 생기므로, 이 구간만 잘라서 체공 시간에 맞춰 재생한다.
+ * (발 높이를 0.02초 간격으로 재서 뽑은 값)
+ */
+export const JUMP_CLIP_START = 0.42;
+export const JUMP_CLIP_END = 1.5;
+export const JUMP_CLIP_SPAN = JUMP_CLIP_END - JUMP_CLIP_START;
+
+/**
  * 캐릭터를 감싸는 캡슐 충돌체.
  * Rapier 캡슐의 전체 높이 = 2 × (halfHeight + radius) = 2 × (1.0 + 0.6) = 3.2유닛
  * → 실제 캐릭터 키(2.149 × CHARACTER_SCALE ≈ 3.22)와 거의 같다.
@@ -155,6 +202,14 @@ export const SNAP_TO_GROUND_DISTANCE = 0.5;
 
 /** 공중에 있을 때 방향키가 먹히는 비율 (1 = 지상과 동일) */
 export const AIR_CONTROL = 0.6;
+
+/**
+ * 조이스틱을 이 세기 이하로 밀면 움직이지 않은 것으로 본다.
+ * 이동 속도 자체는 민 정도와 무관하게 PC와 똑같이 일정하다 —
+ * 아날로그로 속도를 바꾸면 같은 맵을 도는데 기기마다 체감이 달라진다.
+ * 달리기는 조이스틱 세기가 아니라 부스터 버튼(키보드 Shift)으로 켠다.
+ */
+export const MOVE_DEADZONE = 0.05;
 
 /** 스폰할 때 지면 위로 살짝 띄우는 높이 — 지형에 박힌 채 시작하는 걸 막는다 */
 export const SPAWN_LIFT = 2;
