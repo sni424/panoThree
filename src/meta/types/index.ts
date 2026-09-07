@@ -1,6 +1,12 @@
 /** [x, y, z] 좌표. three.js 컴포넌트의 position/scale 등에 그대로 넣을 수 있는 형태 */
 export type Vec3 = [number, number, number];
 
+/**
+ * 캐릭터가 지금 취해야 할 동작.
+ * Player가 물리·입력 상태를 보고 결정하고, Character가 해당 클립을 재생한다.
+ */
+export type CharacterAnimation = "idle" | "walk" | "jump" | "dance";
+
 /** 맵 위에 표시되는 이동/입장 지점 */
 export interface Zone {
   /** 내부 식별자 */
