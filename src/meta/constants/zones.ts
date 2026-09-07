@@ -12,7 +12,9 @@ export const ZONES: Zone[] = [
     label: "파노라마 전시관",
     position: [0, 0, 45],
     color: "#4f8cff",
-    url: "/pano?pid=bongmyeong&page=estimate/login",
+    // 로그인·타입선택을 건너뛰고 바로 360 투어로 들어간다.
+    // tour 화면은 hotspot.json / moveSpot.json만 읽고 앞 단계의 상태에 의존하지 않는다.
+    url: "/pano?pid=bongmyeong&page=estimate/tour",
   },
   {
     id: "portfolio",
